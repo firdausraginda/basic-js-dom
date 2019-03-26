@@ -102,16 +102,16 @@ console.log('======================================');
 // making AJAX calls with fetch and promises
 function getCoinInfo(coinid) {
     fetch(`https://api.coinpaprika.com/v1/coins/${coinid}`)
-    .then(result => {
-        console.log(result);
-        return result.json();
-    })
-    .then(data => {
-        console.log(data);
-        const founder = data.team[0];
-        console.log(`The founder of ${data.name} is ${founder.name}.`);
-    })
-    .catch(error => console.log(error));
+        .then(result => {
+            console.log(result);
+            return result.json();
+        })
+        .then(data => {
+            console.log(data);
+            const founder = data.team[0];
+            console.log(`The founder of ${data.name} is ${founder.name}.`);
+        })
+        .catch(error => console.log(error));
 };
 
 // getCoinInfo('eth-ethereum');
@@ -120,16 +120,16 @@ function getCoinInfo(coinid) {
 console.log('======================================');
 
 // making AJAX calls with fetch and Async/Await
-async function getCoinInfoAW(coinid){
-    try{
+async function getCoinInfoAW(coinid) {
+    try {
         const result = await fetch(`https://api.coinpaprika.com/v1/coins/${coinid}`)
         const data = await result.json()
         const founder = data.team[0];
         console.log(`The founder of ${data.name} is ${founder.name}.`);
-        
+
         return data
-    } 
-    catch(error){
+    }
+    catch (error) {
         console.log(error);
     }
 }
@@ -139,3 +139,39 @@ getCoinInfoAW('btc-bitcoin').then(data => {
     bitcoin = data
     console.log(bitcoin);
 })
+
+console.log('======================================');
+
+let dataRecipes = []
+
+function searchMarket(query) {
+    dataRecipes.forEach(el => {
+        if (el[1] == query) {
+            console.log(el[0]);
+            console.log(el[1]);
+            console.log(el[8]);
+        }
+    })
+}
+
+function getPubAPI() {
+    axios
+        .get('https://public.enigma.com/api/snapshots/4851ed43-a5c1-4821-bdaa-0bfde9a538fa?&row_limit=200&row_offset=0&include_serialids=true')
+        .then(res => {
+            let indc = []
+            res.data.table_rows.rows.forEach(el => {
+                dataRecipes.push(el)
+            })
+            res.data.table_rows.fields.forEach((val,idx) => {
+                if(idx>22 && idx<53){
+                    indc.push(val) 
+                }                
+            })
+        })
+        .then(() => {
+            searchMarket("18th Street Farmer's Market")
+        })
+        .catch(error => console.log(error))
+}
+
+getPubAPI()
